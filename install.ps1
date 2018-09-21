@@ -35,7 +35,7 @@ Print a list of useful software which should be installed by different means.
 Author: Neil Cumpstey
 Date: Sep 2018
 #>
-# Requires -RunAsAdministrator
+#Requires -RunAsAdministrator
 
 [CmdletBinding()]
 Param(
