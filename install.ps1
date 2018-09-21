@@ -99,6 +99,26 @@ function UpdatePath($item)
 
 <#
 .SYNOPSIS
+Creates a shortcut
+#>
+function CreateShortcut($path, $target, $arguments) {
+  # Create a Windows PowerShell Com Object
+  $wshShell = New-Object -ComObject WScript.Shell
+
+  # Use the Com Object to create the Pageant shortcut
+  $shortcut = $wshShell.CreateShortcut($path)
+  $shortcut.TargetPath = $target
+  $shortcut.IconLocation = $target
+  
+  if ($arguments) {
+    $shortcut.Arguments = $arguments
+  }
+
+  $shortcut.Save()
+}
+
+<#
+.SYNOPSIS
 Ensures Chocolatey is installed, by checking for the `choco` command
 and installing Chocolatey if the command is not recognised.
 #>
@@ -300,15 +320,8 @@ Creates shortcuts to items which should be run at startup:
 - Pageant, with appropriate keys
 #>
 function CreateStartupSettings() {
-  # Create a Windows PowerShell Com Object
-  $wshShell = New-Object -ComObject WScript.Shell
-
-  # Use the Com Object to create the Pageant shortcut
-  $pageant = $wshShell.CreateShortcut("$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Pageant.lnk")
-  $pageant.TargetPath = "C:\ProgramData\chocolatey\bin\Pageant.exe"
-  $pageant.IconLocation = "C:\ProgramData\chocolatey\bin\Pageant.exe"
-  $pageant.Arguments = """$env:USERPROFILE\.ssh\id_rsa.ppk"" ""$env:USERPROFILE\.ssh\bitbucket.ppk"" ""$env:USERPROFILE\.ssh\zone_bitbucket.ppk"""
-  $pageant.Save()
+  CreateShortcut "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Pageant.lnk" "C:\ProgramData\chocolatey\bin\Pageant.exe" """$env:USERPROFILE\.ssh\id_rsa.ppk"" ""$env:USERPROFILE\.ssh\bitbucket.ppk"" ""$env:USERPROFILE\.ssh\zone_bitbucket.ppk"""
+  CreateShortcut "$env:USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Papercut.lnk" "C:\ProgramData\chocolatey\bin\Papercut.exe"
 }
 
 <#
